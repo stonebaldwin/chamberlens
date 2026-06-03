@@ -52,6 +52,17 @@ Visit [`/styleguide`](http://localhost:3007/styleguide) to review the design sys
 **No database needed to review.** With no `DATABASE_URL`, the app serves a bundled
 demo dataset and the full product — search, dashboard, and admin cockpit — is
 reviewable. To use Postgres: set `DATABASE_URL`, then `pnpm db:migrate && pnpm db:seed`.
+
+**Live data.** Pull real meetings, agendas, and documents from any token-free
+Legistar government through the Core ingestion pipeline (the same `ingestConfig`
+the cron worker uses) — it records a `sync_run` visible in `/admin`:
+
+```bash
+# pnpm --filter web ingest <client> <name> <state> <timezone>
+pnpm --filter web ingest seattle Seattle WA America/Los_Angeles
+pnpm --filter web ingest oakland Oakland CA America/Los_Angeles
+```
+
 Full guide: **[docs/OPERATIONS.md](docs/OPERATIONS.md)**.
 
 ### Root scripts
