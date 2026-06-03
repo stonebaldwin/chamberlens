@@ -8,7 +8,7 @@ export type BillingInterval = "monthly" | "annual";
 export type PaidPlan = "pro" | "business";
 
 function appUrl(): string {
-  return (resolveEnv("NEXT_PUBLIC_APP_URL") ?? "http://localhost:3000").replace(/\/$/, "");
+  return (resolveEnv("NEXT_PUBLIC_APP_URL") ?? "http://localhost:3007").replace(/\/$/, "");
 }
 
 function db(): Database | null {

@@ -44,10 +44,10 @@ under the neutral `@repo/*` scope so a second product imports them without a Cha
 ```bash
 pnpm install
 cp .env.example .env        # fill in DATABASE_URL (Neon)
-pnpm dev                    # apps/web at http://localhost:3000
+pnpm dev                    # apps/web at http://localhost:3007
 ```
 
-Visit [`/styleguide`](http://localhost:3000/styleguide) to review the design system.
+Visit [`/styleguide`](http://localhost:3007/styleguide) to review the design system.
 
 **No database needed to review.** With no `DATABASE_URL`, the app serves a bundled
 demo dataset and the full product — search, dashboard, and admin cockpit — is
