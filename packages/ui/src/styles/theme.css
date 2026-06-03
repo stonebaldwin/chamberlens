@@ -1,0 +1,107 @@
+/*
+ * Design tokens for the public-data platform UI.
+ * Aesthetic: "serious public-records infrastructure" — trustworthy, calm,
+ * data-dense (Linear / Stripe / Mercury). Imported by each app's global
+ * stylesheet immediately after `@import "tailwindcss"`.
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ── Surfaces & ink ─────────────────────────────────────────────── */
+  --color-paper: #fafaf8; /* warm off-white page background */
+  --color-surface: #ffffff; /* cards, panels */
+  --color-surface-muted: #f4f4f0; /* subtle fills, table headers */
+  --color-ink: #0a0e14; /* near-black primary text */
+  --color-ink-muted: #545b66; /* secondary text */
+  --color-ink-subtle: #8a8f98; /* tertiary text, icons */
+  --color-border: #e6e5e0; /* hairline borders */
+  --color-border-strong: #d6d5cf; /* inputs, dividers */
+
+  /* ── Brand — deep civic blue ────────────────────────────────────── */
+  --color-primary: #1b3a6b;
+  --color-primary-hover: #16315a;
+  --color-primary-active: #11264a;
+  --color-primary-tint: #eaf0f8; /* badge / highlight background */
+  --color-primary-foreground: #fafaf8;
+  --color-ring: #2e5aac; /* focus ring */
+
+  /* ── Semantic ───────────────────────────────────────────────────── */
+  --color-success: #1f7a4d;
+  --color-success-tint: #e6f3ec;
+  --color-warning: #b4690e;
+  --color-warning-tint: #faf0dc;
+  --color-danger: #b42318;
+  --color-danger-tint: #fbeae8;
+  --color-info: #1b5e8c;
+  --color-info-tint: #e6f1f8;
+
+  /* ── Meeting / recency states ───────────────────────────────────── */
+  --color-state-upcoming: #1b3a6b;
+  --color-state-live: #b42318;
+  --color-state-recent: #1f7a4d;
+  --color-state-past: #8a8f98;
+
+  /* ── Typography ─────────────────────────────────────────────────── */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* extra small size for metadata / IDs / timestamps */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+
+  /* ── Radius ─────────────────────────────────────────────────────── */
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 7px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  /* ── Shadows — subtle, layered ──────────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(10, 14, 20, 0.04);
+  --shadow-sm: 0 1px 2px rgba(10, 14, 20, 0.06), 0 1px 1px rgba(10, 14, 20, 0.04);
+  --shadow-md: 0 2px 8px rgba(10, 14, 20, 0.08), 0 1px 2px rgba(10, 14, 20, 0.04);
+  --shadow-lg: 0 8px 24px rgba(10, 14, 20, 0.1), 0 2px 6px rgba(10, 14, 20, 0.06);
+}
+
+/* ── Dark mode token overrides (light is primary; toggle via `.dark`) ── */
+.dark {
+  --color-paper: #0a0d12;
+  --color-surface: #11151c;
+  --color-surface-muted: #1a1f28;
+  --color-ink: #f5f6f7;
+  --color-ink-muted: #a3a9b3;
+  --color-ink-subtle: #6b7280;
+  --color-border: #232a34;
+  --color-border-strong: #313a47;
+  --color-primary: #5b8def;
+  --color-primary-hover: #6f9bf2;
+  --color-primary-active: #4a7ce0;
+  --color-primary-tint: #16233b;
+  --color-primary-foreground: #0a0d12;
+  --color-ring: #5b8def;
+  --color-success-tint: #102a1d;
+  --color-warning-tint: #2a1f0c;
+  --color-danger-tint: #2a1413;
+  --color-info-tint: #102230;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+}

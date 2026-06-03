@@ -1,0 +1,37 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# kysely 0.29.2 dropped the top-level DEFAULT_MIGRATION_TABLE re-export that
+# better-auth's (optional, unused) kysely adapter imports, breaking Turbopack's
+# static analysis. Pin to the adapter's minimum supported peer, which has it.
+overrides:
+  kysely: 0.28.17
+
+# pnpm 10+ blocks dependency build (lifecycle) scripts by default. Allow the
+# native toolchains our stack needs to compile their platform binaries:
+#   workerd       — Workers runtime for `wrangler dev` / opennext preview
+#   esbuild       — used by drizzle-kit, tsx, OpenNext, vitest
+#   sharp         — Next.js image optimization
+#   unrs-resolver — native module resolver used by lint tooling
+#   @tailwindcss/oxide — Tailwind v4 native engine
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+  workerd: true
+  "@tailwindcss/oxide": true
+
+# wrangler/miniflare publish same-day releases; exclude them from the global
+# minimum-release-age gate so installs don't stall waiting on them.
+minimumReleaseAgeExclude:
+  - miniflare@4.20260601.0
+  - wrangler@4.97.0
+  - "@better-auth/core@1.6.14"
+  - "@better-auth/drizzle-adapter@1.6.14"
+  - "@better-auth/kysely-adapter@1.6.14"
+  - "@better-auth/memory-adapter@1.6.14"
+  - "@better-auth/mongo-adapter@1.6.14"
+  - "@better-auth/prisma-adapter@1.6.14"
+  - "@better-auth/telemetry@1.6.14"
+  - better-auth@1.6.14

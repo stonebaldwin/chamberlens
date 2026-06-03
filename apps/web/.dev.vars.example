@@ -1,0 +1,3 @@
+# Local Workers-runtime secrets for `pnpm --filter web preview`.
+# Copy to apps/web/.dev.vars (gitignored) and fill in. Mirror of root .env.
+DATABASE_URL="postgresql://USER:PASSWORD@HOST/DB?sslmode=require"

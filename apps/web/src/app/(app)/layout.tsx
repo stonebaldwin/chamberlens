@@ -1,0 +1,39 @@
+import type { ReactNode } from "react";
+import Link from "next/link";
+import { Gavel } from "lucide-react";
+import { Badge } from "@repo/ui";
+import { DashboardNav } from "@/components/dashboard-nav";
+import { SignOutButton } from "@/components/sign-out-button";
+import { requireUser } from "@/lib/session";
+
+export default async function AppLayout({ children }: { children: ReactNode }) {
+  const user = await requireUser();
+  return (
+    <div className="min-h-dvh bg-paper">
+      <header className="border-b border-border bg-surface">
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-6 py-3">
+          <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight text-ink">
+            <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
+              <Gavel className="size-4" />
+            </span>
+            ChamberLens
+          </Link>
+          {user.isDemo ? <Badge variant="warning">Demo</Badge> : null}
+          <div className="ml-auto flex items-center gap-3 text-sm">
+            <span className="hidden text-ink-muted sm:inline">{user.email}</span>
+            <Badge variant="primary" className="capitalize">
+              {user.plan}
+            </Badge>
+            <SignOutButton demo={user.isDemo} />
+          </div>
+        </div>
+      </header>
+      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-8 lg:grid-cols-[220px_1fr]">
+        <aside>
+          <DashboardNav plan={user.plan} isOperator={user.role === "operator"} />
+        </aside>
+        <main className="min-w-0">{children}</main>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "chamberlens-ingest",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "triggers": {
+    // Daily ingestion (most bodies meet weekly/bi-weekly, so daily polling is
+    // plenty) + alert processing every 15 minutes.
+    "crons": ["0 9 * * *", "*/15 * * * *"],
+  },
+  "queues": {
+    "producers": [{ "binding": "INGEST_QUEUE", "queue": "chamberlens-ingest-jobs" }],
+    "consumers": [
+      {
+        "queue": "chamberlens-ingest-jobs",
+        "max_batch_size": 10,
+        "max_batch_timeout": 30,
+        "max_retries": 3,
+      },
+    ],
+  },
+  "observability": {
+    "enabled": true,
+  },
+  // Browser Rendering for JS-rendered portals (enable when needed):
+  //   "browser": { "binding": "BROWSER" }
+  // Secrets (DATABASE_URL, RESEND_API_KEY, DEEPGRAM/ASSEMBLYAI keys, OPERATOR_EMAIL)
+  // via `wrangler secret put`. Per-jurisdiction Legistar tokens are named by
+  // platform_configs.apiTokenRef and provided as secrets of that name.
+}

@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnp.*
+
+# Builds
+.next/
+.open-next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+cloudflare-env.d.ts
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Test / coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
