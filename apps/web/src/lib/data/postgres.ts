@@ -98,15 +98,17 @@ export class PostgresDataSource implements DataSource {
   }
 
   async listJurisdictions(): Promise<JurisdictionLite[]> {
-    const jurs = await this.db.select().from(schema.jurisdictions);
-    const bodyCounts = await this.db
-      .select({ jid: schema.govBodies.jurisdictionId, c: count() })
-      .from(schema.govBodies)
-      .groupBy(schema.govBodies.jurisdictionId);
-    const meetCounts = await this.db
-      .select({ jid: schema.meetings.jurisdictionId, c: count() })
-      .from(schema.meetings)
-      .groupBy(schema.meetings.jurisdictionId);
+    const [jurs, bodyCounts, meetCounts] = await Promise.all([
+      this.db.select().from(schema.jurisdictions),
+      this.db
+        .select({ jid: schema.govBodies.jurisdictionId, c: count() })
+        .from(schema.govBodies)
+        .groupBy(schema.govBodies.jurisdictionId),
+      this.db
+        .select({ jid: schema.meetings.jurisdictionId, c: count() })
+        .from(schema.meetings)
+        .groupBy(schema.meetings.jurisdictionId),
+    ]);
     const bc = new Map(bodyCounts.map((r) => [r.jid, Number(r.c)]));
     const mc = new Map(meetCounts.map((r) => [r.jid, Number(r.c)]));
     return jurs
@@ -176,13 +178,31 @@ export class PostgresDataSource implements DataSource {
       with: { govBodies: true },
     });
     if (!j) return null;
-    const list = await this.listJurisdictions();
-    const lite = list.find((x) => x.id === j.id);
-    if (!lite) return null;
-    const { recent, upcoming } = await this.meetingsForScope(
-      eq(schema.meetings.jurisdictionId, j.id),
-      new Date(),
-    );
+    // Scope the counts to THIS jurisdiction (index-backed) instead of running the
+    // global cross-jurisdiction aggregation; parallelize with the meeting scope.
+    const [[bodyCount], [meetCount], scope] = await Promise.all([
+      this.db
+        .select({ c: count() })
+        .from(schema.govBodies)
+        .where(eq(schema.govBodies.jurisdictionId, j.id)),
+      this.db
+        .select({ c: count() })
+        .from(schema.meetings)
+        .where(eq(schema.meetings.jurisdictionId, j.id)),
+      this.meetingsForScope(eq(schema.meetings.jurisdictionId, j.id), new Date()),
+    ]);
+    const lite: JurisdictionLite = {
+      id: j.id,
+      slug: j.slug,
+      name: j.name,
+      state: j.state,
+      type: j.type,
+      lat: j.lat,
+      lng: j.lng,
+      bodyCount: Number(bodyCount?.c ?? 0),
+      meetingCount: Number(meetCount?.c ?? 0),
+    };
+    const { recent, upcoming } = scope;
     return {
       jurisdiction: lite,
       bodies: j.govBodies.map((b) => this.bodyLite(b, j)),
@@ -264,10 +284,13 @@ export class PostgresDataSource implements DataSource {
   }
 
   async stats(): Promise<CoverageStats> {
-    const [j] = await this.db.select({ c: count() }).from(schema.jurisdictions);
-    const [b] = await this.db.select({ c: count() }).from(schema.govBodies);
-    const [m] = await this.db.select({ c: count() }).from(schema.meetings);
-    const [d] = await this.db.select({ c: count() }).from(schema.documents);
+    // Independent counts — run them in parallel (one wall-clock RTT, not four).
+    const [[j], [b], [m], [d]] = await Promise.all([
+      this.db.select({ c: count() }).from(schema.jurisdictions),
+      this.db.select({ c: count() }).from(schema.govBodies),
+      this.db.select({ c: count() }).from(schema.meetings),
+      this.db.select({ c: count() }).from(schema.documents),
+    ]);
     return {
       jurisdictions: Number(j?.c ?? 0),
       bodies: Number(b?.c ?? 0),

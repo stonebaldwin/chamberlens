@@ -1,4 +1,5 @@
 import { and, type Database, eq, inArray, schema, sql } from "@repo/db";
+import { sanitizeSnippet } from "../util/text";
 
 export interface AlertNotification {
   alertId: string;
@@ -114,7 +115,7 @@ export async function processInstantAlerts(
           userId: ss.userId,
           channel: "email",
           status: "pending",
-          snippet: snippet || ev.snippet,
+          snippet: sanitizeSnippet(snippet || ev.snippet),
           deepLink,
         })
         .onConflictDoNothing()
@@ -129,7 +130,7 @@ export async function processInstantAlerts(
         query: ss.query,
         meetingId: ev.meetingId,
         title: ev.title ?? "New match",
-        snippet: snippet || ev.snippet || "",
+        snippet: sanitizeSnippet(snippet || ev.snippet || ""),
         deepLink,
       });
       await db

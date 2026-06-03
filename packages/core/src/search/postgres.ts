@@ -1,5 +1,6 @@
 import { and, type Database, desc, eq, gte, inArray, lte, schema, sql } from "@repo/db";
 import type { DocType } from "../types";
+import { sanitizeSnippet } from "../util/text";
 import type {
   IndexableDoc,
   SearchHit,
@@ -36,7 +37,7 @@ export function toHit(row: RankedRow): SearchHit {
     jurisdictionId: row.jurisdictionId,
     docType: row.docType,
     title: row.title,
-    snippet: row.snippet ?? "",
+    snippet: sanitizeSnippet(row.snippet),
     rank: Number(row.rank),
     meetingDate: row.meetingDate instanceof Date ? row.meetingDate : new Date(row.meetingDate),
   };
@@ -79,6 +80,9 @@ export class PostgresSearchProvider implements SearchProvider {
         meetingDate: sd.meetingDate,
         rank,
         snippet,
+        // Total matches via window fn — avoids a second full-text COUNT round-trip
+        // that would re-run the entire tsquery match.
+        total: sql<number>`count(*) over()`,
       })
       .from(sd)
       .where(where)
@@ -86,12 +90,8 @@ export class PostgresSearchProvider implements SearchProvider {
       .limit(query.limit ?? 20)
       .offset(query.offset ?? 0);
 
-    const totalRows = await this.db
-      .select({ total: sql<number>`count(*)::int` })
-      .from(sd)
-      .where(where);
-
-    return { hits: rows.map(toHit), total: Number(totalRows[0]?.total ?? 0) };
+    const total = rows.length ? Number(rows[0]!.total) : 0;
+    return { hits: rows.map(toHit), total };
   }
 }
 

@@ -52,7 +52,9 @@ const PLANS: Record<Plan, Entitlements> = {
 
 /** Single source of truth for plan gating (UI + server handlers). */
 export function getEntitlements(plan: Plan): Entitlements {
-  return PLANS[plan];
+  // Fall back to free for any unrecognized/legacy plan value so a bad plan string
+  // from the DB can never crash every gated page.
+  return PLANS[plan] ?? PLANS.free;
 }
 
 export function planLabel(plan: Plan): string {

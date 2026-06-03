@@ -88,3 +88,20 @@ export function slugify(s: string): string {
     .replace(/[\s_]+/g, "-")
     .replace(/-+/g, "-");
 }
+
+/**
+ * Snippets (Postgres `ts_headline` and content-event text) wrap matches in
+ * `<mark>` but do NOT escape the surrounding source text, which is untrusted
+ * ingested civic content. When a snippet is rendered via `dangerouslySetInnerHTML`,
+ * escape all HTML and then re-allow ONLY the `<mark>` sentinels — preventing
+ * stored XSS from any markup in source documents.
+ */
+export function sanitizeSnippet(raw: string | null | undefined): string {
+  if (!raw) return "";
+  return raw
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replaceAll("&lt;mark&gt;", "<mark>")
+    .replaceAll("&lt;/mark&gt;", "</mark>");
+}

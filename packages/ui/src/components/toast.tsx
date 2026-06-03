@@ -73,7 +73,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 return (
                   <div
                     key={i.id}
-                    role="status"
+                    role={i.variant === "danger" || i.variant === "warning" ? "alert" : "status"}
                     className="pointer-events-auto flex items-start gap-3 rounded-lg border border-border bg-surface p-3 shadow-md"
                   >
                     <Icon className={cn("mt-0.5 size-4 shrink-0", accents[i.variant])} />

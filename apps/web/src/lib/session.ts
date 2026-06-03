@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { authAvailable, getAuth } from "./auth";
@@ -12,6 +13,8 @@ export interface SessionUser {
   role: string;
   plan: Plan;
   isDemo: boolean;
+  /** Present once the user has a Stripe customer (any subscription status). */
+  stripeCustomerId: string | null;
 }
 
 const DEMO_USER: SessionUser = {
@@ -21,6 +24,7 @@ const DEMO_USER: SessionUser = {
   role: "operator",
   plan: "business",
   isDemo: true,
+  stripeCustomerId: null,
 };
 
 /**
@@ -28,12 +32,20 @@ const DEMO_USER: SessionUser = {
  * demo user so the dashboard is reviewable; otherwise we read the Better Auth
  * session. Plan is derived from subscriptions in Phase 5.
  */
-export async function getSessionUser(): Promise<SessionUser | null> {
+// Memoized per request (React cache) so the layout + page + metadata that each
+// call this resolve the session ONCE instead of repeating the auth+plan queries.
+export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
   if (!authAvailable()) return DEMO_USER;
   try {
     const session = await getAuth().api.getSession({ headers: await headers() });
     if (!session?.user) return null;
-    const u = session.user as { id: string; email: string; name?: string | null; role?: string };
+    const u = session.user as {
+      id: string;
+      email: string;
+      name?: string | null;
+      role?: string;
+      stripeCustomerId?: string | null;
+    };
     const plan = await getUserPlan(u.id);
     return {
       id: u.id,
@@ -42,11 +54,16 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       role: u.role ?? "user",
       plan,
       isDemo: false,
+      stripeCustomerId: u.stripeCustomerId ?? null,
     };
-  } catch {
-    return null;
+  } catch (err) {
+    // "No session" is handled above (returns null). Reaching here means a real
+    // backend failure — log it and rethrow so we render the error boundary rather
+    // than silently logging an authenticated user out on a transient DB blip.
+    console.error("[auth] failed to resolve session", err);
+    throw err;
   }
-}
+});
 
 export async function requireUser(): Promise<SessionUser> {
   const user = await getSessionUser();

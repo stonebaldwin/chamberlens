@@ -10,6 +10,12 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   const user = await requireUser();
   return (
     <div className="min-h-dvh bg-paper">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
+      >
+        Skip to content
+      </a>
       <header className="border-b border-border bg-surface">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-6 py-3">
           <Link href="/" aria-label="ChamberLens home" className="shrink-0">
@@ -29,7 +35,9 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         <aside>
           <DashboardNav plan={user.plan} isOperator={user.role === "operator"} />
         </aside>
-        <main className="min-w-0">{children}</main>
+        <main id="main" tabIndex={-1} className="min-w-0 outline-none">
+          {children}
+        </main>
       </div>
     </div>
   );

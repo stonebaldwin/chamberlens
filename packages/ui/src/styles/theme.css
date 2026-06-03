@@ -20,7 +20,7 @@
   --color-surface-muted: #ece4d3; /* subtle fills, table headers */
   --color-ink: #1b1813; /* warm near-black primary text */
   --color-ink-muted: #5b5446; /* secondary text */
-  --color-ink-subtle: #8c8472; /* tertiary text, icons */
+  --color-ink-subtle: #6b6452; /* tertiary text, icons — WCAG AA (~5:1 on paper) */
   --color-border: #e1d8c5; /* hairline borders */
   --color-border-strong: #ccc1a8; /* inputs, dividers */
 
@@ -32,17 +32,19 @@
   --color-primary-foreground: #f6f2e8;
   --color-ring: #2f7d5c; /* focus ring */
 
-  /* ── Accent — amber / archival highlighter ──────────────────────── */
-  --color-accent: #b3741a;
-  --color-accent-hover: #98610f;
+  /* ── Accent — deep amber / archival highlighter ─────────────────── */
+  /* Tuned dark enough to pass AA as link/badge text on light surfaces (~5:1);
+     fills pair with the cream foreground. The light tint stays for <mark> washes. */
+  --color-accent: #8a5a12;
+  --color-accent-hover: #744d0f;
   --color-accent-tint: #f3e3c1;
-  --color-accent-foreground: #1b1813;
+  --color-accent-foreground: #f6f2e8;
 
   /* ── Semantic ───────────────────────────────────────────────────── */
-  --color-success: #2c7a50;
+  --color-success: #287046;
   --color-success-tint: #deeee2;
-  --color-warning: #a96a10;
-  --color-warning-tint: #f3e3c1; /* doubles as the <mark> highlighter wash */
+  --color-warning: #855410;
+  --color-warning-tint: #f3e3c1;
   --color-danger: #a83a26;
   --color-danger-tint: #f4ddd3;
   --color-info: #2a6675;
@@ -169,5 +171,17 @@
       var(--color-border) 35px,
       var(--color-border) 36px
     );
+  }
+}
+
+/* Respect users who prefer reduced motion — neutralize animations/transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

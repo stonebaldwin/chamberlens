@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { buttonVariants, SearchBar } from "@repo/ui";
 import { ChamberLensWordmark } from "./brand";
+import { MobileNav } from "./mobile-nav";
 
 const navLink =
   "text-sm font-medium text-ink-muted underline-offset-[6px] transition-colors hover:text-ink hover:underline decoration-accent decoration-2";
@@ -23,12 +24,15 @@ export function SiteHeader() {
             Pricing
           </Link>
         </nav>
-        <div className="ml-auto hidden w-64 md:block">
-          <SearchBar compact placeholder="Search records…" />
+        <div className="ml-auto flex items-center gap-2">
+          <div className="hidden w-64 md:block">
+            <SearchBar compact placeholder="Search records…" />
+          </div>
+          <Link href="/login" className={buttonVariants({ variant: "secondary", size: "sm" })}>
+            Sign in
+          </Link>
+          <MobileNav />
         </div>
-        <Link href="/login" className={buttonVariants({ variant: "secondary", size: "sm" })}>
-          Sign in
-        </Link>
       </div>
     </header>
   );

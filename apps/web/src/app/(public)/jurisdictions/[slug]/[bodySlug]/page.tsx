@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buttonVariants, MeetingRow, PageHeader } from "@repo/ui";
-import { getDataSource } from "@/lib/data";
+import { loadBody } from "@/lib/data";
 import { formatDateShort } from "@/lib/format";
 
 export const revalidate = 3600;
@@ -11,7 +11,7 @@ type Params = { slug: string; bodySlug: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug, bodySlug } = await params;
-  const page = await getDataSource().getBodyBySlug(slug, bodySlug);
+  const page = await loadBody(slug, bodySlug);
   if (!page) return { title: "Body not found" };
   const { body: b } = page;
   return {
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 export default async function BodyPage({ params }: { params: Promise<Params> }) {
   const { slug, bodySlug } = await params;
-  const page = await getDataSource().getBodyBySlug(slug, bodySlug);
+  const page = await loadBody(slug, bodySlug);
   if (!page) notFound();
   const { body: b, recentMeetings, upcomingMeetings } = page;
 

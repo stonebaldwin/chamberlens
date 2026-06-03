@@ -15,7 +15,7 @@ import {
   TranscriptViewer,
   type TranscriptSegmentView,
 } from "@repo/ui";
-import { getDataSource } from "@/lib/data";
+import { loadMeeting } from "@/lib/data";
 import { formatDate, formatDateTime, relativeLabel } from "@/lib/format";
 
 export const revalidate = 3600;
@@ -33,7 +33,7 @@ const STATUS_VARIANT: Record<string, "primary" | "neutral" | "warning" | "danger
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { id } = await params;
-  const meeting = await getDataSource().getMeetingById(id);
+  const meeting = await loadMeeting(id);
   if (!meeting) return { title: "Meeting not found" };
   const title = `${meeting.jurisdictionName} ${meeting.govBodyName} — ${formatDate(meeting.scheduledAt)}`;
   return {
@@ -51,7 +51,7 @@ export default async function MeetingPage({
 }) {
   const { id } = await params;
   const { q, t } = await searchParams;
-  const meeting = await getDataSource().getMeetingById(id);
+  const meeting = await loadMeeting(id);
   if (!meeting) notFound();
 
   const seekMs = t ? Number(t) : null;
@@ -77,7 +77,8 @@ export default async function MeetingPage({
     <main className="mx-auto max-w-4xl px-6 py-8">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        // Escape `<` so a field containing "</script>" can't break out of the tag.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <PageHeader
         eyebrow={

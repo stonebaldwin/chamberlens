@@ -88,6 +88,7 @@ export default async function SearchPage({
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
+      <h1 className="sr-only">Search ChamberLens</h1>
       <form action="/search" className="flex flex-col gap-6">
         <div className="flex items-center gap-2">
           <div className="relative flex-1">

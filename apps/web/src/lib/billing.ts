@@ -112,7 +112,10 @@ function periodEnd(sub: Stripe.Subscription): Date | null {
 /** Idempotently upsert our subscription row from a Stripe subscription (webhook). */
 export async function syncSubscriptionFromStripe(sub: Stripe.Subscription): Promise<void> {
   const d = db();
-  if (!d) return;
+  // The webhook only calls this when billing is configured, so a missing DB here
+  // is a misconfig/outage — THROW so the webhook returns 500 and Stripe retries,
+  // rather than silently dropping a paid subscription (it would never retry a 200).
+  if (!d) throw new Error("syncSubscriptionFromStripe: DATABASE_URL is not configured");
 
   const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
   let userId = (sub.metadata?.userId as string | undefined) ?? null;
@@ -122,7 +125,12 @@ export async function syncSubscriptionFromStripe(sub: Stripe.Subscription): Prom
     });
     userId = u?.id ?? null;
   }
-  if (!userId) return;
+  if (!userId) {
+    // Not retryable — the subscription isn't linked to any user. Log loudly and ack
+    // so Stripe doesn't retry forever, but make it visible for reconciliation.
+    console.error("[billing] no user for Stripe subscription", sub.id, "customer", customerId);
+    return;
+  }
 
   const priceId = sub.items.data[0]?.price.id ?? null;
   const plan = planForPriceId(priceId);

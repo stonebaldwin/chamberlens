@@ -1,17 +1,21 @@
 import { NextResponse } from "next/server";
-import { getDataSource } from "@/lib/data";
+import { getDataSource, isDemoMode } from "@/lib/data";
 import { resolveEnv } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
+// The hardcoded demo key is ONLY accepted in demo mode (no DATABASE_URL), so the
+// public API stays reviewable without setup. With a real database, require
+// CHAMBERLENS_DEMO_API_KEY — never ship a working bearer token in the bundle.
 const DEMO_KEY = "chamberlens_demo_readonly_key";
 
-// Simple authed read API over search. In production, keys are looked up in a
-// keys table (Phase 7); here we accept the demo key (or CHAMBERLENS_DEMO_API_KEY).
 export async function GET(request: Request): Promise<Response> {
+  const validKey = resolveEnv("CHAMBERLENS_DEMO_API_KEY") ?? (isDemoMode() ? DEMO_KEY : null);
+  if (!validKey) {
+    return NextResponse.json({ error: "API not configured" }, { status: 503 });
+  }
   const auth = request.headers.get("authorization") ?? "";
   const key = auth.replace(/^Bearer\s+/i, "").trim();
-  const validKey = resolveEnv("CHAMBERLENS_DEMO_API_KEY") ?? DEMO_KEY;
   if (!key || key !== validKey) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

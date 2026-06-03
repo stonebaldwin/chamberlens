@@ -24,8 +24,18 @@ const CLIENT = process.argv[2] ?? "seattle";
 const NAME = process.argv[3] ?? "Seattle";
 const STATE = process.argv[4] ?? "WA";
 const TZ = process.argv[5] ?? "America/Los_Angeles";
-const MAX_EVENTS = Number(process.env.MAX_EVENTS ?? 20);
-const SLUG = `${NAME.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-${STATE.toLowerCase()}`;
+const MAX_EVENTS_RAW = Number(process.env.MAX_EVENTS ?? 20);
+const MAX_EVENTS = Number.isFinite(MAX_EVENTS_RAW)
+  ? Math.min(200, Math.max(1, Math.trunc(MAX_EVENTS_RAW)))
+  : 20;
+const NAME_SLUG = NAME.toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/(^-|-$)/g, "");
+if (!NAME_SLUG) {
+  console.error(`Invalid jurisdiction name "${NAME}" — it produces an empty slug.`);
+  process.exit(1);
+}
+const SLUG = `${NAME_SLUG}-${STATE.toLowerCase()}`;
 
 // Rough city centroids for the geo-radius feature (optional).
 const COORDS: Record<string, [number, number]> = {
@@ -34,7 +44,7 @@ const COORDS: Record<string, [number, number]> = {
   metro: [34.0522, -118.2437],
 };
 
-async function main(): Promise<void> {
+async function main(): Promise<boolean> {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is required (root .env).");
   const db = createDb(url);
@@ -130,10 +140,11 @@ async function main(): Promise<void> {
       .where(eq(schema.platformConfigs.id, cfg.id));
   }
   console.log("\nDone.");
+  return run.status !== "failed";
 }
 
 main()
-  .then(() => process.exit(0))
+  .then((ok) => process.exit(ok ? 0 : 1))
   .catch((err) => {
     console.error(err);
     process.exit(1);

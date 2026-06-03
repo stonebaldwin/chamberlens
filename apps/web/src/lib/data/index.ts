@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createDb } from "@repo/db";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { DemoDataSource } from "./demo";
@@ -35,3 +36,12 @@ export function getDataSource(): DataSource {
 export function isDemoMode(): boolean {
   return getDataSource().isDemo;
 }
+
+// Per-request memoized loaders (React cache) — dedupe the generateMetadata + page
+// component double-fetch on dynamic detail routes. Within one render they hit the
+// DB once; across requests they're independent.
+export const loadMeeting = cache((id: string) => getDataSource().getMeetingById(id));
+export const loadJurisdiction = cache((slug: string) => getDataSource().getJurisdictionBySlug(slug));
+export const loadBody = cache((jurisdictionSlug: string, bodySlug: string) =>
+  getDataSource().getBodyBySlug(jurisdictionSlug, bodySlug),
+);

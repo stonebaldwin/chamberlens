@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Building2 } from "lucide-react";
 import { buttonVariants, MeetingRow, PageHeader, Stat, StatRow } from "@repo/ui";
-import { getDataSource } from "@/lib/data";
+import { loadJurisdiction } from "@/lib/data";
 import { formatDateShort } from "@/lib/format";
 
 export const revalidate = 3600;
@@ -12,7 +12,7 @@ type Params = { slug: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
-  const page = await getDataSource().getJurisdictionBySlug(slug);
+  const page = await loadJurisdiction(slug);
   if (!page) return { title: "Jurisdiction not found" };
   const { jurisdiction: j } = page;
   return {
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
 export default async function JurisdictionPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const page = await getDataSource().getJurisdictionBySlug(slug);
+  const page = await loadJurisdiction(slug);
   if (!page) notFound();
   const { jurisdiction: j, bodies, recentMeetings, upcomingMeetings } = page;
 

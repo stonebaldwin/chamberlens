@@ -59,8 +59,33 @@ export function DialogContent({
   ...props
 }: DialogContentProps) {
   const ref = React.useRef<HTMLDivElement>(null);
+  const descId = React.useId();
   React.useEffect(() => {
-    ref.current?.focus();
+    const node = ref.current;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    node?.focus();
+    // Trap Tab within the dialog (WCAG 2.4.3 / 2.1.2) and restore focus on close.
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !node) return;
+      const focusables = node.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input:not([disabled]), select, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0]!;
+      const last = focusables[focusables.length - 1]!;
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    node?.addEventListener("keydown", onKeyDown);
+    return () => {
+      node?.removeEventListener("keydown", onKeyDown);
+      previouslyFocused?.focus?.();
+    };
   }, []);
 
   return (
@@ -69,6 +94,7 @@ export function DialogContent({
       role="dialog"
       aria-modal="true"
       aria-label={title}
+      aria-describedby={description ? descId : undefined}
       tabIndex={-1}
       className={cn(
         "relative z-10 w-full max-w-lg rounded-xl border border-border bg-surface shadow-lg outline-none",
@@ -82,7 +108,11 @@ export function DialogContent({
             {title ? (
               <h2 className="text-lg font-semibold tracking-tight text-ink">{title}</h2>
             ) : null}
-            {description ? <p className="text-sm text-ink-muted">{description}</p> : null}
+            {description ? (
+              <p id={descId} className="text-sm text-ink-muted">
+                {description}
+              </p>
+            ) : null}
           </div>
           {onClose ? (
             <button

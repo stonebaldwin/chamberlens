@@ -45,7 +45,12 @@ export function DashboardNav({
         const active = path === it.href;
         const locked = "business" in it && it.business && plan !== "business";
         return (
-          <Link key={it.href} href={it.href} className={linkCls(active)}>
+          <Link
+            key={it.href}
+            href={it.href}
+            aria-current={active ? "page" : undefined}
+            className={linkCls(active)}
+          >
             <it.icon className="size-4" />
             <span className="flex-1">{it.label}</span>
             {locked ? <Lock className="size-3 text-ink-subtle" /> : null}

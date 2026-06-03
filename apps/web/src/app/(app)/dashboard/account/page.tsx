@@ -41,7 +41,7 @@ export default async function AccountPage() {
             >
               {user.plan === "free" ? "Upgrade" : "Change plan"}
             </Link>
-            {user.plan !== "free" && !user.isDemo ? (
+            {user.stripeCustomerId && !user.isDemo ? (
               <Link
                 href="/billing/portal"
                 className={buttonVariants({ variant: "ghost", size: "sm" })}
