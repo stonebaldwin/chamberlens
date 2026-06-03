@@ -1,21 +1,18 @@
 import Link from "next/link";
-import { Gavel } from "lucide-react";
 import { buttonVariants, SearchBar } from "@repo/ui";
+import { ChamberLensWordmark } from "./brand";
 
 const navLink =
-  "rounded-md px-2.5 py-1.5 text-sm text-ink-muted transition-colors hover:bg-surface-muted hover:text-ink";
+  "text-sm font-medium text-ink-muted underline-offset-[6px] transition-colors hover:text-ink hover:underline decoration-accent decoration-2";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-paper/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-6 py-3">
-        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight text-ink">
-          <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Gavel className="size-4" />
-          </span>
-          ChamberLens
+    <header className="sticky top-0 z-30 border-b border-border bg-paper/85 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-3.5">
+        <Link href="/" aria-label="ChamberLens home" className="shrink-0">
+          <ChamberLensWordmark />
         </Link>
-        <nav className="ml-1 hidden items-center sm:flex">
+        <nav className="ml-1 hidden items-center gap-6 sm:flex">
           <Link href="/search" className={navLink}>
             Search
           </Link>
@@ -26,8 +23,8 @@ export function SiteHeader() {
             Pricing
           </Link>
         </nav>
-        <div className="ml-auto hidden w-72 md:block">
-          <SearchBar />
+        <div className="ml-auto hidden w-64 md:block">
+          <SearchBar compact placeholder="Search records…" />
         </div>
         <Link href="/login" className={buttonVariants({ variant: "secondary", size: "sm" })}>
           Sign in

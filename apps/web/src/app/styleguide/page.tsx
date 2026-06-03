@@ -174,17 +174,17 @@ export default function StyleguidePage() {
         <Badge variant="primary" className="w-fit">
           @repo/ui
         </Badge>
-        <h1 className="text-3xl font-semibold tracking-tight text-ink">Design System</h1>
+        <h1 className="font-serif text-4xl font-semibold tracking-tight text-ink">Design System</h1>
         <p className="max-w-2xl text-ink-muted">
-          Serious public-records infrastructure — calm, trustworthy, data-dense. Every design token
-          and primitive used across the platform. ChamberLens-specific components (search interface,
-          result cards, transcript viewer, alert builder, coverage map) are added here in Phase 3.
+          &ldquo;The Civic Record&rdquo; — an editorial public-records aesthetic: warm parchment,
+          deep civic evergreen, and an amber archival highlighter. Every design token and primitive
+          used across the platform, plus the ChamberLens-specific civic surfaces.
         </p>
       </header>
 
       <Section
         title="Color — surfaces & ink"
-        description="Warm off-white paper, near-black ink, restrained borders."
+        description="Warm parchment paper, warm near-black ink, restrained hairline borders."
       >
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-6">
           <Swatch name="paper" className="bg-paper" />
@@ -200,13 +200,15 @@ export default function StyleguidePage() {
 
       <Section
         title="Color — brand & semantic"
-        description="One confident civic blue, plus semantic and meeting-recency accents."
+        description="Deep civic evergreen + an amber accent, plus semantic and meeting-recency states."
       >
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-6">
           <Swatch name="primary" className="bg-primary" />
           <Swatch name="primary-hover" className="bg-primary-hover" />
           <Swatch name="primary-active" className="bg-primary-active" />
           <Swatch name="primary-tint" className="bg-primary-tint" />
+          <Swatch name="accent" className="bg-accent" />
+          <Swatch name="accent-tint" className="bg-accent-tint" />
           <Swatch name="success" className="bg-success" />
           <Swatch name="success-tint" className="bg-success-tint" />
           <Swatch name="warning" className="bg-warning" />
@@ -224,9 +226,15 @@ export default function StyleguidePage() {
 
       <Section
         title="Typography"
-        description="Inter for UI; JetBrains Mono for IDs, timestamps, and metadata."
+        description="Public Sans for UI, Fraunces for editorial display, JetBrains Mono for record metadata."
       >
         <div className="flex flex-col gap-3">
+          <div className="mb-2 flex items-baseline gap-4">
+            <code className="w-20 shrink-0 font-mono text-2xs text-ink-subtle">font-serif</code>
+            <span className="font-serif text-3xl font-semibold tracking-tight text-ink">
+              Search the public <span className="italic">record</span>
+            </span>
+          </div>
           {typeScale.map((t) => (
             <div key={t.token} className="flex items-baseline gap-4">
               <code className="w-20 shrink-0 font-mono text-2xs text-ink-subtle">{t.token}</code>
@@ -539,8 +547,8 @@ export default function StyleguidePage() {
             />
             <CoverageList
               items={[
-                { name: "Raleigh", state: "NC", href: "#", bodyCount: 2, meetingCount: 3 },
-                { name: "Charlotte", state: "NC", href: "#", bodyCount: 2, meetingCount: 3 },
+                { name: "Raleigh", state: "NC", href: "#raleigh", bodyCount: 2, meetingCount: 3 },
+                { name: "Charlotte", state: "NC", href: "#charlotte", bodyCount: 2, meetingCount: 3 },
               ]}
             />
           </div>

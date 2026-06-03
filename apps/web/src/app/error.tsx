@@ -17,7 +17,9 @@ export default function ErrorBoundary({
 
   return (
     <main className="mx-auto flex max-w-xl flex-col items-center gap-4 px-6 py-24 text-center">
-      <h1 className="text-2xl font-semibold tracking-tight text-ink">Something went wrong</h1>
+      <h1 className="font-serif text-3xl font-semibold tracking-tight text-ink">
+        Something went wrong
+      </h1>
       <p className="text-sm text-ink-muted">
         An unexpected error occurred.{" "}
         {error.digest ? <code className="font-mono text-2xs">({error.digest})</code> : null}

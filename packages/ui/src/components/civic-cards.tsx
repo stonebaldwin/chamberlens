@@ -4,7 +4,9 @@ import { cn } from "../lib/cn";
 import { Badge } from "./badge";
 import { buttonVariants } from "./button";
 
-const markStyles = "[&_mark]:rounded-sm [&_mark]:bg-warning-tint [&_mark]:px-0.5 [&_mark]:text-ink";
+/** Amber "highlighter" wash on server-generated <mark> snippets. */
+const markStyles =
+  "[&_mark]:box-decoration-clone [&_mark]:rounded-[2px] [&_mark]:bg-accent-tint [&_mark]:px-0.5 [&_mark]:py-px [&_mark]:font-medium [&_mark]:text-ink";
 
 /** A search result card with highlighted snippet and an "alert" CTA. */
 export function ResultCard({
@@ -27,21 +29,27 @@ export function ResultCard({
   alertHref?: string | null;
 }) {
   return (
-    <article className="rounded-lg border border-border bg-surface p-4 transition-colors hover:border-border-strong">
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs text-ink-muted">
-        <span className="font-medium text-ink">{jurisdiction}</span>
-        <span aria-hidden>·</span>
-        <span>{body}</span>
+    <article className="group relative overflow-hidden rounded-md border border-border bg-surface p-4 transition-all hover:border-border-strong hover:shadow-sm">
+      <span
+        aria-hidden
+        className="absolute inset-y-0 left-0 w-0.5 bg-accent opacity-0 transition-opacity group-hover:opacity-100"
+      />
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <span className="text-sm font-semibold text-ink">{jurisdiction}</span>
+        <span aria-hidden className="text-ink-subtle">
+          ·
+        </span>
+        <span className="text-xs text-ink-muted">{body}</span>
         {docType ? (
-          <Badge variant="neutral" className="ml-1 capitalize">
+          <Badge variant="neutral" className="ml-0.5 capitalize">
             {docType}
           </Badge>
         ) : null}
-        <span className="ml-auto font-mono">{dateLabel}</span>
+        <span className="ml-auto font-mono text-2xs text-ink-subtle">{dateLabel}</span>
       </div>
       <a
         href={href}
-        className="mt-1.5 block text-base font-semibold tracking-tight text-ink hover:text-primary"
+        className="mt-1.5 block text-base font-semibold tracking-tight text-ink transition-colors group-hover:text-primary"
       >
         {title}
       </a>
@@ -56,7 +64,7 @@ export function ResultCard({
         <div className="mt-2.5">
           <a
             href={alertHref}
-            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline"
           >
             <Bell className="size-3.5" /> Set an alert for this search
           </a>
@@ -85,10 +93,14 @@ export function MeetingRow({
   return (
     <a
       href={href}
-      className="flex items-center gap-3 border-b border-border py-3 last:border-0 hover:bg-surface-muted/40"
+      className="group flex items-center gap-3 border-b border-border py-3 transition-colors last:border-0 hover:bg-surface-muted/40"
     >
+      <span
+        aria-hidden
+        className="h-8 w-px shrink-0 bg-border-strong transition-colors group-hover:bg-accent"
+      />
       <div className="min-w-0 flex-1">
-        <div className="truncate text-sm font-medium text-ink">{title}</div>
+        <div className="truncate text-sm font-medium text-ink group-hover:text-primary">{title}</div>
         <div className="text-2xs text-ink-muted">{body}</div>
       </div>
       {badges}
@@ -111,15 +123,13 @@ export function PageHeader({
 }) {
   return (
     <header className="flex flex-col gap-3 border-b border-border pb-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-1.5">
-          {eyebrow ? (
-            <div className="text-2xs font-semibold uppercase tracking-wide text-ink-subtle">
-              {eyebrow}
-            </div>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          {eyebrow ? <div className="kicker">{eyebrow}</div> : null}
+          <h1 className="font-serif text-3xl font-semibold tracking-tight text-ink">{title}</h1>
+          {description ? (
+            <div className="max-w-2xl text-sm text-ink-muted">{description}</div>
           ) : null}
-          <h1 className="text-2xl font-semibold tracking-tight text-ink">{title}</h1>
-          {description ? <div className="text-sm text-ink-muted">{description}</div> : null}
         </div>
         {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
       </div>
@@ -129,15 +139,17 @@ export function PageHeader({
 
 export function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-0.5">
-      <div className="text-2xl font-semibold tracking-tight text-ink tabular-nums">{value}</div>
-      <div className="text-2xs uppercase tracking-wide text-ink-subtle">{label}</div>
+    <div className="flex flex-col gap-1 border-l-2 border-primary/25 pl-3">
+      <div className="font-serif text-3xl font-semibold leading-none text-ink tabular-nums">
+        {value}
+      </div>
+      <div className="kicker">{label}</div>
     </div>
   );
 }
 
 export function StatRow({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-wrap gap-8">{children}</div>;
+  return <div className="flex flex-wrap gap-x-10 gap-y-6">{children}</div>;
 }
 
 /** Source attribution + retrieval timestamp — present on every record. */
@@ -159,7 +171,7 @@ export function SourceMeta({
       >
         official record <ExternalLink className="size-3" />
       </a>{" "}
-      · Retrieved {retrievedLabel}
+      · Retrieved <span className="font-mono">{retrievedLabel}</span>
     </p>
   );
 }
@@ -167,11 +179,11 @@ export function SourceMeta({
 /** AI summary block — always labeled, never presented as authoritative. */
 export function AiSummary({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-info/30 bg-info-tint/60 p-4">
-      <div className="flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-wide text-info">
+    <div className="rounded-md border border-info/30 bg-info-tint/60 p-4">
+      <div className="kicker flex items-center gap-1.5 text-info">
         <Sparkles className="size-3.5" /> AI-generated summary
       </div>
-      <p className="mt-1.5 text-sm text-ink">{children}</p>
+      <p className="mt-2 text-sm text-ink">{children}</p>
       <p className="mt-2 text-2xs text-ink-subtle">
         AI-generated — not the authoritative record. Verify against the primary documents below.
       </p>
@@ -194,19 +206,19 @@ export function CoverageList({ items }: { items: CoverageItem[] }) {
         <li key={it.href}>
           <a
             href={it.href}
-            className="flex items-center justify-between rounded-lg border border-border bg-surface px-3 py-2.5 transition-colors hover:border-border-strong"
+            className="group flex items-center justify-between rounded-md border border-border bg-surface px-3.5 py-3 transition-all hover:border-border-strong hover:bg-surface-muted/40"
           >
             <span className="flex flex-col">
-              <span className="text-sm font-medium text-ink">
+              <span className="text-sm font-semibold text-ink">
                 {it.name}, {it.state}
               </span>
               {it.bodyCount != null ? (
-                <span className="text-2xs text-ink-subtle">
+                <span className="font-mono text-2xs text-ink-subtle">
                   {it.bodyCount} bodies · {it.meetingCount ?? 0} meetings
                 </span>
               ) : null}
             </span>
-            <ArrowRight className="size-4 text-ink-subtle" />
+            <ArrowRight className="size-4 text-ink-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
           </a>
         </li>
       ))}
@@ -238,19 +250,21 @@ export function PricingTier({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-xl border bg-surface p-6",
+        "relative flex flex-col gap-4 rounded-lg border bg-surface p-6",
         highlighted ? "border-primary shadow-md" : "border-border",
       )}
     >
+      {highlighted ? (
+        <span className="kicker absolute -top-2.5 left-6 rounded-sm bg-primary px-2 py-0.5 text-primary-foreground">
+          Most popular
+        </span>
+      ) : null}
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold tracking-tight text-ink">{name}</h3>
-          {highlighted ? <Badge variant="primary">Popular</Badge> : null}
-        </div>
+        <h3 className="font-serif text-xl font-semibold tracking-tight text-ink">{name}</h3>
         <p className="text-sm text-ink-muted">{description}</p>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-3xl font-semibold tracking-tight text-ink">{price}</span>
+        <span className="font-serif text-4xl font-semibold tracking-tight text-ink">{price}</span>
         {cadence ? <span className="text-sm text-ink-subtle">{cadence}</span> : null}
       </div>
       <a
@@ -259,7 +273,7 @@ export function PricingTier({
       >
         {ctaLabel}
       </a>
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-2 border-t border-border pt-4">
         {features.map((f) => (
           <li key={f} className="flex items-start gap-2 text-sm text-ink-muted">
             <Check className="mt-0.5 size-4 shrink-0 text-success" />

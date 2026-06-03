@@ -85,7 +85,7 @@ export default async function AdminHome() {
         <div className="mt-3 overflow-x-auto rounded-lg border border-border">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-border bg-surface-muted/60 text-2xs uppercase tracking-wide text-ink-subtle">
+              <tr className="kicker border-b border-border bg-surface-muted/60">
                 <th className="px-3 py-2 font-medium">Platform</th>
                 <th className="px-3 py-2 font-medium">Jurisdiction</th>
                 <th className="px-3 py-2 font-medium">Status</th>

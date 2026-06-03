@@ -20,8 +20,11 @@ cloudflare-env.d.ts
 .env.local
 .env.*.local
 
-# Test / coverage
-coverage/
+# Test / coverage output — anchored to package/app roots so it does NOT match
+# the `/coverage` app route at apps/web/src/app/(public)/coverage/.
+/coverage/
+apps/*/coverage/
+packages/*/coverage/
 
 # Logs
 *.log

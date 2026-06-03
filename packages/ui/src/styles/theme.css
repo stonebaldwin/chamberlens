@@ -1,107 +1,173 @@
 /*
- * Design tokens for the public-data platform UI.
- * Aesthetic: "serious public-records infrastructure" — trustworthy, calm,
- * data-dense (Linear / Stripe / Mercury). Imported by each app's global
- * stylesheet immediately after `@import "tailwindcss"`.
+ * ChamberLens design tokens — "The Civic Record".
+ *
+ * Aesthetic: an editorial public-records archive crossed with a monitoring
+ * desk. Warm parchment paper, deep evergreen civic ink, an amber highlighter
+ * accent. Typography does the heavy lifting: Public Sans (the U.S. government
+ * design-system typeface) for UI, Fraunces for editorial display, and
+ * JetBrains Mono for the *metadata of the record* — IDs, dates, counts.
+ *
+ * Imported by each app's global stylesheet immediately after
+ * `@import "tailwindcss"`. Product-agnostic: no ChamberLens-specific selectors.
  */
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* ── Surfaces & ink ─────────────────────────────────────────────── */
-  --color-paper: #fafaf8; /* warm off-white page background */
-  --color-surface: #ffffff; /* cards, panels */
-  --color-surface-muted: #f4f4f0; /* subtle fills, table headers */
-  --color-ink: #0a0e14; /* near-black primary text */
-  --color-ink-muted: #545b66; /* secondary text */
-  --color-ink-subtle: #8a8f98; /* tertiary text, icons */
-  --color-border: #e6e5e0; /* hairline borders */
-  --color-border-strong: #d6d5cf; /* inputs, dividers */
+  --color-paper: #f4efe3; /* warm parchment page background */
+  --color-surface: #fbf8f1; /* cards, panels — warm white */
+  --color-surface-muted: #ece4d3; /* subtle fills, table headers */
+  --color-ink: #1b1813; /* warm near-black primary text */
+  --color-ink-muted: #5b5446; /* secondary text */
+  --color-ink-subtle: #8c8472; /* tertiary text, icons */
+  --color-border: #e1d8c5; /* hairline borders */
+  --color-border-strong: #ccc1a8; /* inputs, dividers */
 
-  /* ── Brand — deep civic blue ────────────────────────────────────── */
-  --color-primary: #1b3a6b;
-  --color-primary-hover: #16315a;
-  --color-primary-active: #11264a;
-  --color-primary-tint: #eaf0f8; /* badge / highlight background */
-  --color-primary-foreground: #fafaf8;
-  --color-ring: #2e5aac; /* focus ring */
+  /* ── Brand — deep civic evergreen ───────────────────────────────── */
+  --color-primary: #1d4d39;
+  --color-primary-hover: #184030;
+  --color-primary-active: #123326;
+  --color-primary-tint: #dfeae1; /* badge / highlight background */
+  --color-primary-foreground: #f6f2e8;
+  --color-ring: #2f7d5c; /* focus ring */
+
+  /* ── Accent — amber / archival highlighter ──────────────────────── */
+  --color-accent: #b3741a;
+  --color-accent-hover: #98610f;
+  --color-accent-tint: #f3e3c1;
+  --color-accent-foreground: #1b1813;
 
   /* ── Semantic ───────────────────────────────────────────────────── */
-  --color-success: #1f7a4d;
-  --color-success-tint: #e6f3ec;
-  --color-warning: #b4690e;
-  --color-warning-tint: #faf0dc;
-  --color-danger: #b42318;
-  --color-danger-tint: #fbeae8;
-  --color-info: #1b5e8c;
-  --color-info-tint: #e6f1f8;
+  --color-success: #2c7a50;
+  --color-success-tint: #deeee2;
+  --color-warning: #a96a10;
+  --color-warning-tint: #f3e3c1; /* doubles as the <mark> highlighter wash */
+  --color-danger: #a83a26;
+  --color-danger-tint: #f4ddd3;
+  --color-info: #2a6675;
+  --color-info-tint: #dbeaed;
 
   /* ── Meeting / recency states ───────────────────────────────────── */
-  --color-state-upcoming: #1b3a6b;
-  --color-state-live: #b42318;
-  --color-state-recent: #1f7a4d;
-  --color-state-past: #8a8f98;
+  --color-state-upcoming: #1d4d39;
+  --color-state-live: #a83a26;
+  --color-state-recent: #2c7a50;
+  --color-state-past: #8c8472;
 
   /* ── Typography ─────────────────────────────────────────────────── */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans:
+    var(--font-public-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, Cambria, "Times New Roman", serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
 
   /* extra small size for metadata / IDs / timestamps */
   --text-2xs: 0.6875rem;
   --text-2xs--line-height: 1rem;
 
-  /* ── Radius ─────────────────────────────────────────────────────── */
-  --radius-xs: 3px;
-  --radius-sm: 5px;
-  --radius-md: 7px;
-  --radius-lg: 10px;
-  --radius-xl: 14px;
+  /* ── Radius — crisp, archival (less "pillowy SaaS") ─────────────── */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
 
-  /* ── Shadows — subtle, layered ──────────────────────────────────── */
-  --shadow-xs: 0 1px 2px rgba(10, 14, 20, 0.04);
-  --shadow-sm: 0 1px 2px rgba(10, 14, 20, 0.06), 0 1px 1px rgba(10, 14, 20, 0.04);
-  --shadow-md: 0 2px 8px rgba(10, 14, 20, 0.08), 0 1px 2px rgba(10, 14, 20, 0.04);
-  --shadow-lg: 0 8px 24px rgba(10, 14, 20, 0.1), 0 2px 6px rgba(10, 14, 20, 0.06);
+  /* ── Shadows — subtle, warm-tinted ──────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(27, 24, 19, 0.05);
+  --shadow-sm: 0 1px 2px rgba(27, 24, 19, 0.06), 0 1px 1px rgba(27, 24, 19, 0.04);
+  --shadow-md: 0 2px 8px rgba(27, 24, 19, 0.08), 0 1px 2px rgba(27, 24, 19, 0.05);
+  --shadow-lg: 0 12px 32px rgba(27, 24, 19, 0.12), 0 3px 8px rgba(27, 24, 19, 0.06);
 }
 
-/* ── Dark mode token overrides (light is primary; toggle via `.dark`) ── */
+/* ── Dark mode — warm "reading lamp" dark (light remains primary) ──── */
 .dark {
-  --color-paper: #0a0d12;
-  --color-surface: #11151c;
-  --color-surface-muted: #1a1f28;
-  --color-ink: #f5f6f7;
-  --color-ink-muted: #a3a9b3;
-  --color-ink-subtle: #6b7280;
-  --color-border: #232a34;
-  --color-border-strong: #313a47;
-  --color-primary: #5b8def;
-  --color-primary-hover: #6f9bf2;
-  --color-primary-active: #4a7ce0;
-  --color-primary-tint: #16233b;
-  --color-primary-foreground: #0a0d12;
-  --color-ring: #5b8def;
-  --color-success-tint: #102a1d;
-  --color-warning-tint: #2a1f0c;
-  --color-danger-tint: #2a1413;
-  --color-info-tint: #102230;
+  --color-paper: #14120d;
+  --color-surface: #1c1812;
+  --color-surface-muted: #251f17;
+  --color-ink: #f2ebdf;
+  --color-ink-muted: #aea48d;
+  --color-ink-subtle: #7c7360;
+  --color-border: #2d2820;
+  --color-border-strong: #3c3529;
+  --color-primary: #5fb389;
+  --color-primary-hover: #72c099;
+  --color-primary-active: #4fa078;
+  --color-primary-tint: #16271d;
+  --color-primary-foreground: #14120d;
+  --color-ring: #5fb389;
+  --color-accent: #d9a04a;
+  --color-accent-hover: #e3ad5c;
+  --color-accent-tint: #2a2010;
+  --color-accent-foreground: #14120d;
+  --color-success: #5aae80;
+  --color-success-tint: #13291d;
+  --color-warning: #d9a04a;
+  --color-warning-tint: #2a2010;
+  --color-danger: #d4745c;
+  --color-danger-tint: #2b1611;
+  --color-info: #62a6b6;
+  --color-info-tint: #0f262b;
+  --color-state-upcoming: #5fb389;
+  --color-state-live: #d4745c;
+  --color-state-recent: #5aae80;
+  --color-state-past: #7c7360;
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   body {
     background-color: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-size: 0.875rem;
-    line-height: 1.5;
+    font-size: 0.9375rem; /* 15px — a touch larger, editorial reading size */
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  /* Fraunces editorial display: optical sizing + a hair of "soft" character. */
+  .font-serif {
+    font-optical-sizing: auto;
+    font-variation-settings: "SOFT" 0, "WONK" 0;
+    letter-spacing: -0.011em;
+  }
   ::selection {
-    background-color: var(--color-primary);
-    color: var(--color-primary-foreground);
+    background-color: var(--color-accent-tint);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Editorial eyebrow / kicker — the "filed under" label of the record. */
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    line-height: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--color-ink-subtle);
+  }
+  /* Hairline "filing rule" that fades out — used under kickers & section heads. */
+  .filing-rule {
+    height: 1px;
+    border: 0;
+    background: linear-gradient(to right, var(--color-border-strong), transparent);
+  }
+  /* Faint survey/plat dot grid for hero & feature backgrounds. */
+  .bg-dotgrid {
+    background-image: radial-gradient(var(--color-border-strong) 1px, transparent 1px);
+    background-size: 22px 22px;
+    background-position: -11px -11px;
+  }
+  /* Hairline ledger rules, like ruled archival paper. */
+  .bg-ledger {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 35px,
+      var(--color-border) 35px,
+      var(--color-border) 36px
+    );
   }
 }

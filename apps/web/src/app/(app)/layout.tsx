@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Gavel } from "lucide-react";
 import { Badge } from "@repo/ui";
+import { ChamberLensWordmark } from "@/components/brand";
 import { DashboardNav } from "@/components/dashboard-nav";
 import { SignOutButton } from "@/components/sign-out-button";
 import { requireUser } from "@/lib/session";
@@ -12,11 +12,8 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     <div className="min-h-dvh bg-paper">
       <header className="border-b border-border bg-surface">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-6 py-3">
-          <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight text-ink">
-            <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Gavel className="size-4" />
-            </span>
-            ChamberLens
+          <Link href="/" aria-label="ChamberLens home" className="shrink-0">
+            <ChamberLensWordmark />
           </Link>
           {user.isDemo ? <Badge variant="warning">Demo</Badge> : null}
           <div className="ml-auto flex items-center gap-3 text-sm">

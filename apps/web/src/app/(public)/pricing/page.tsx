@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Check, Minus } from "lucide-react";
-import { Badge, PricingTier, type PricingTierProps } from "@repo/ui";
+import { PricingTier, type PricingTierProps } from "@repo/ui";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -81,8 +81,8 @@ export default function PricingPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
       <div className="flex flex-col items-center gap-3 text-center">
-        <Badge variant="primary">Simple, self-serve pricing</Badge>
-        <h1 className="text-3xl font-semibold tracking-tight text-ink">
+        <span className="kicker">Simple, self-serve pricing</span>
+        <h1 className="font-serif text-4xl font-semibold tracking-tight text-ink">
           Free to search. Pay when you want to be alerted.
         </h1>
         <p className="max-w-2xl text-ink-muted">
@@ -98,15 +98,15 @@ export default function PricingPage() {
       </div>
 
       <section className="mt-16">
-        <h2 className="text-lg font-semibold tracking-tight text-ink">Compare plans</h2>
+        <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink">Compare plans</h2>
         <div className="mt-4 overflow-x-auto rounded-lg border border-border">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-border bg-surface-muted/60">
-                <th className="px-4 py-2.5 font-medium text-ink-muted">Feature</th>
-                <th className="px-4 py-2.5 text-center font-medium text-ink-muted">Free</th>
-                <th className="px-4 py-2.5 text-center font-medium text-ink-muted">Pro</th>
-                <th className="px-4 py-2.5 text-center font-medium text-ink-muted">Business</th>
+              <tr className="kicker border-b border-border bg-surface-muted/60">
+                <th className="px-4 py-3 text-left">Feature</th>
+                <th className="px-4 py-3 text-center">Free</th>
+                <th className="px-4 py-3 text-center">Pro</th>
+                <th className="px-4 py-3 text-center">Business</th>
               </tr>
             </thead>
             <tbody>

@@ -12,8 +12,8 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
           alignItems: "center",
           justifyContent: "center",
           gap: "1rem",
-          color: "#0a0e14",
-          background: "#fafaf8",
+          color: "#1b1813",
+          background: "#f4efe3",
         }}
       >
         <h1 style={{ fontSize: "1.25rem", fontWeight: 600 }}>Something went wrong</h1>
@@ -21,10 +21,10 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
           type="button"
           onClick={reset}
           style={{
-            borderRadius: 7,
+            borderRadius: 5,
             border: "none",
-            background: "#1b3a6b",
-            color: "#fafaf8",
+            background: "#1d4d39",
+            color: "#f6f2e8",
             padding: "0.5rem 1rem",
             cursor: "pointer",
           }}

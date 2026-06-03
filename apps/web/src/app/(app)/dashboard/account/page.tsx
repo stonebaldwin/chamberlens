@@ -25,7 +25,7 @@ export default async function AccountPage() {
       <section className="rounded-lg border border-border bg-surface p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <div className="text-2xs uppercase tracking-wide text-ink-subtle">Current plan</div>
+            <div className="kicker">Current plan</div>
             <div className="mt-0.5 flex items-center gap-2 text-xl font-semibold text-ink">
               {planLabel(user.plan)}
               {user.plan !== "free" ? <Badge variant="success">Active</Badge> : null}

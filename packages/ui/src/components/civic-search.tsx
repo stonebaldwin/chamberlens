@@ -12,6 +12,7 @@ export function SearchBar({
   size = "md",
   autoFocus,
   hiddenFields,
+  compact = false,
 }: {
   action?: string;
   name?: string;
@@ -20,16 +21,37 @@ export function SearchBar({
   size?: "md" | "lg";
   autoFocus?: boolean;
   hiddenFields?: Record<string, string>;
+  /** Single-field inline search (no button) — for the header masthead. */
+  compact?: boolean;
 }) {
+  const hidden = hiddenFields
+    ? Object.entries(hiddenFields).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)
+    : null;
+
+  if (compact) {
+    return (
+      <form action={action} className="relative w-full">
+        {hidden}
+        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-subtle" />
+        <input
+          name={name}
+          defaultValue={defaultValue}
+          placeholder={placeholder}
+          aria-label="Search query"
+          className={cn(
+            "h-9 w-full rounded-md border border-border-strong bg-surface pl-9 pr-3 text-sm text-ink",
+            "placeholder:text-ink-subtle focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
+          )}
+        />
+      </form>
+    );
+  }
+
   return (
     <form action={action} className="flex w-full items-center gap-2">
-      {hiddenFields
-        ? Object.entries(hiddenFields).map(([k, v]) => (
-            <input key={k} type="hidden" name={k} value={v} />
-          ))
-        : null}
+      {hidden}
       <div className="relative flex-1">
-        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-subtle" />
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-subtle" />
         <input
           name={name}
           defaultValue={defaultValue}
@@ -37,9 +59,9 @@ export function SearchBar({
           autoFocus={autoFocus}
           aria-label="Search query"
           className={cn(
-            "w-full rounded-lg border border-border-strong bg-surface pl-10 pr-3 text-ink shadow-xs",
+            "w-full rounded-md border border-border-strong bg-surface pl-11 pr-3 text-ink shadow-xs",
             "placeholder:text-ink-subtle focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
-            size === "lg" ? "h-12 text-lg" : "h-11 text-base",
+            size === "lg" ? "h-13 text-lg" : "h-11 text-base",
           )}
         />
       </div>
@@ -71,17 +93,18 @@ export function FacetGroup({
   if (!options.length) return null;
   return (
     <fieldset className="flex flex-col gap-2">
-      <legend className="mb-1 text-2xs font-semibold uppercase tracking-wide text-ink-subtle">
-        {title}
-      </legend>
+      <legend className="kicker mb-1.5">{title}</legend>
       {options.map((o) => (
-        <label key={o.value} className="flex cursor-pointer items-center gap-2 text-sm text-ink">
+        <label
+          key={o.value}
+          className="group flex cursor-pointer items-center gap-2 text-sm text-ink-muted transition-colors hover:text-ink"
+        >
           <input
             type="checkbox"
             name={name}
             value={o.value}
             defaultChecked={selected.includes(o.value)}
-            className="size-4 rounded border-border-strong text-primary focus-visible:ring-2 focus-visible:ring-ring/30"
+            className="size-4 rounded-[3px] border-border-strong text-primary focus-visible:ring-2 focus-visible:ring-ring/30"
           />
           <span className="flex-1">{o.label}</span>
           {o.count != null ? (
@@ -111,7 +134,7 @@ export function Pagination({
   const disabled = "pointer-events-none opacity-40";
   return (
     <nav className="flex items-center justify-between text-sm">
-      <span className="tabular-nums text-ink-muted">
+      <span className="font-mono text-2xs text-ink-subtle">
         {offset + 1}–{Math.min(offset + limit, total)} of {total}
       </span>
       <div className="flex items-center gap-2">
@@ -124,8 +147,8 @@ export function Pagination({
         >
           Previous
         </a>
-        <span className="tabular-nums text-ink-muted">
-          Page {page} / {pages}
+        <span className="font-mono text-2xs text-ink-subtle">
+          {page} / {pages}
         </span>
         <a
           href={hrefFor(offset + limit)}

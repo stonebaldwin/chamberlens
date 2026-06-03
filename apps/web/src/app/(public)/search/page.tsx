@@ -91,13 +91,13 @@ export default async function SearchPage({
       <form action="/search" className="flex flex-col gap-6">
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-subtle" />
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-subtle" />
             <input
               name="q"
               defaultValue={q}
               aria-label="Search query"
               placeholder="Search agendas, minutes, and transcripts…"
-              className="h-11 w-full rounded-lg border border-border-strong bg-surface pl-10 pr-3 text-base text-ink shadow-xs placeholder:text-ink-subtle focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+              className="h-11 w-full rounded-md border border-border-strong bg-surface pl-11 pr-3 text-base text-ink shadow-xs placeholder:text-ink-subtle focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
             />
           </div>
           <Button type="submit">Search</Button>
@@ -131,9 +131,7 @@ export default async function SearchPage({
               options={DOC_TYPES}
             />
             <fieldset className="flex flex-col gap-2">
-              <legend className="mb-1 text-2xs font-semibold uppercase tracking-wide text-ink-subtle">
-                Date range
-              </legend>
+              <legend className="kicker mb-1.5">Date range</legend>
               <label className="flex items-center justify-between gap-2 text-2xs text-ink-muted">
                 From
                 <input
