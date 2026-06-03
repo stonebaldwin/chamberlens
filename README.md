@@ -6,6 +6,10 @@ SaaS that aggregates public local-government meeting agendas, minutes, and video
 jurisdictions and across vendor platforms, makes them full-text searchable, and sends keyword
 alerts.
 
+> **Live demo:** **[chamberlens-web.csb5170.workers.dev](https://chamberlens-web.csb5170.workers.dev)**
+> — deployed on Cloudflare Workers (OpenNext) against Neon Postgres, with live-ingested
+> Seattle, WA and Oakland, CA records alongside the demo dataset.
+
 ## Why a monorepo
 
 The expensive parts — the adapter framework, normalizer, entity resolution, change
