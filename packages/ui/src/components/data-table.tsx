@@ -92,10 +92,19 @@ export function DataTable<T>({
                     : col.align === "center"
                       ? "text-center"
                       : "";
+                const ariaSort: React.AriaAttributes["aria-sort"] = col.sortAccessor
+                  ? active && sort
+                    ? sort.dir === "asc"
+                      ? "ascending"
+                      : "descending"
+                    : "none"
+                  : undefined;
+                const headerLabel = typeof col.header === "string" ? col.header : col.key;
                 return (
                   <th
                     key={col.key}
                     scope="col"
+                    aria-sort={ariaSort}
                     style={col.width ? { width: col.width } : undefined}
                     className={cn("px-3 py-2 font-medium text-ink-muted", alignClass)}
                   >
@@ -103,6 +112,7 @@ export function DataTable<T>({
                       <button
                         type="button"
                         onClick={() => toggleSort(col.key)}
+                        aria-label={`Sort by ${headerLabel}${active && sort ? ` (${sort.dir === "asc" ? "ascending" : "descending"})` : ""}`}
                         className="inline-flex items-center gap-1 outline-none hover:text-ink focus-visible:text-ink"
                       >
                         {col.header}

@@ -20,7 +20,8 @@ export async function sendEmail(
 ): Promise<{ ok: boolean; id?: string; error?: string }> {
   const c = client();
   if (!c) {
-    console.log(`[email:dev] to=${input.to} subject="${input.subject}"`);
+    // RESEND_API_KEY unset — log instead of sending so dev/preview still works.
+    console.warn(`[email] simulated (RESEND_API_KEY unset): to=${input.to} subject="${input.subject}"`);
     return { ok: true };
   }
   const { data, error } = await c.emails.send({

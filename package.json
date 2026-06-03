@@ -12,6 +12,7 @@
     "dev": "pnpm --filter web dev",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:generate": "pnpm --filter @repo/db db:generate",
